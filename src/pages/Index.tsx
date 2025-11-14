@@ -5,6 +5,13 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import Icon from '@/components/ui/icon';
 import { useToast } from '@/hooks/use-toast';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog';
 
 const pranks = [
   {
@@ -33,6 +40,8 @@ const pranks = [
 export default function Index() {
   const [activeSound, setActiveSound] = useState<number | null>(null);
   const [formData, setFormData] = useState({ name: '', email: '', message: '' });
+  const [signature, setSignature] = useState('');
+  const [showPrankDialog, setShowPrankDialog] = useState(false);
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const { toast } = useToast();
 
@@ -73,6 +82,18 @@ export default function Index() {
     setFormData({ name: '', email: '', message: '' });
   };
 
+  const handleSignature = (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    if (signature.trim()) {
+      const prankSound = new Audio('https://actions.google.com/sounds/v1/cartoon/cartoon_boing.ogg');
+      prankSound.play();
+      
+      setShowPrankDialog(true);
+      setSignature('');
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-purple-950 to-background">
       <nav className="border-b border-border/40 backdrop-blur-sm bg-background/30 sticky top-0 z-50">
@@ -90,6 +111,9 @@ export default function Index() {
               </a>
               <a href="#contact" className="text-foreground/80 hover:text-foreground transition-colors font-medium">
                 Контакты
+              </a>
+              <a href="#secret" className="text-foreground/80 hover:text-foreground transition-colors font-medium">
+                Только для натуралов 💪
               </a>
             </div>
           </div>
@@ -172,6 +196,44 @@ export default function Index() {
         </div>
       </section>
 
+      <section id="secret" className="container mx-auto px-4 py-20">
+        <div className="max-w-2xl mx-auto">
+          <h2 className="text-5xl font-black text-center mb-4 bg-gradient-to-r from-primary via-secondary to-accent bg-clip-text text-transparent">
+            💪 ЗАЙДИ ЕСЛИ НАТУРАЛЬ
+          </h2>
+          <p className="text-center text-foreground/60 mb-8 text-lg">
+            Только для настоящих мужиков! Докажи это! 🔥
+          </p>
+          <Card className="border-2 border-primary hover:border-secondary transition-all animate-glow-pulse">
+            <CardHeader>
+              <CardTitle className="text-2xl">Подтверждение Натуральности</CardTitle>
+              <CardDescription>Распишись ниже, чтобы подтвердить свой статус</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <form onSubmit={handleSignature} className="space-y-6">
+                <div>
+                  <label className="block text-sm font-medium mb-2">Твоя подпись</label>
+                  <Input 
+                    placeholder="Введи свою подпись здесь..."
+                    value={signature}
+                    onChange={(e) => setSignature(e.target.value)}
+                    required
+                    className="border-2 text-lg h-14"
+                  />
+                </div>
+                <Button 
+                  type="submit" 
+                  className="w-full text-xl py-7 bg-gradient-to-r from-primary via-secondary to-accent hover:from-accent hover:to-primary transition-all duration-300 font-black"
+                >
+                  <Icon name="CheckCircle" className="mr-2" size={24} />
+                  ПОДТВЕРДИТЬ СВОЙ СТАТУС
+                </Button>
+              </form>
+            </CardContent>
+          </Card>
+        </div>
+      </section>
+
       <section id="contact" className="container mx-auto px-4 py-20">
         <div className="max-w-2xl mx-auto">
           <h2 className="text-5xl font-black text-center mb-4 bg-gradient-to-r from-primary via-accent to-secondary bg-clip-text text-transparent">
@@ -230,6 +292,34 @@ export default function Index() {
           </Card>
         </div>
       </section>
+
+      <Dialog open={showPrankDialog} onOpenChange={setShowPrankDialog}>
+        <DialogContent className="sm:max-w-md border-4 border-primary bg-gradient-to-br from-secondary to-accent">
+          <DialogHeader>
+            <DialogTitle className="text-4xl font-black text-center mb-4 text-white animate-shake">
+              🏳️‍🌈 ПОЗДРАВЛЯЕМ! 🏳️‍🌈
+            </DialogTitle>
+            <DialogDescription className="text-2xl font-bold text-center text-white">
+              ТЫ ТЕПЕРЬ ГЕЙ
+            </DialogDescription>
+          </DialogHeader>
+          <div className="flex flex-col items-center gap-4 py-4">
+            <div className="text-8xl animate-bounce-crazy">🌈</div>
+            <p className="text-xl font-bold text-white text-center">
+              Ты подписался под этим! 😂
+            </p>
+            <p className="text-lg text-white/80 text-center">
+              Это был пранк, расслабься! 🎪
+            </p>
+            <Button
+              onClick={() => setShowPrankDialog(false)}
+              className="mt-4 text-lg px-8 py-6 bg-white text-primary hover:bg-white/90 font-black"
+            >
+              ЗАКРЫТЬ ЭТОТ ПОЗОР 😅
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
 
       <footer className="border-t border-border/40 backdrop-blur-sm bg-background/30 py-8 mt-20">
         <div className="container mx-auto px-4 text-center">
