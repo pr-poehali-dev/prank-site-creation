@@ -15,7 +15,7 @@ export default function Index() {
   const [showPrank, setShowPrank] = useState(false);
   const [showGayPrank, setShowGayPrank] = useState(false);
   const [signature, setSignature] = useState('');
-  const [currentSection, setCurrentSection] = useState<'roblox' | 'natual'>('roblox');
+  const [currentSection, setCurrentSection] = useState<'roblox' | 'natual' | 'pranks'>('roblox');
 
   const handleRobloxClick = () => {
     const prankSound = new Audio('https://actions.google.com/sounds/v1/cartoon/cartoon_boing.ogg');
@@ -60,6 +60,16 @@ export default function Index() {
             >
               💪 Для натуралов
             </button>
+            <button
+              onClick={() => setCurrentSection('pranks')}
+              className={`text-xl font-bold transition-all ${
+                currentSection === 'pranks'
+                  ? 'text-primary scale-110'
+                  : 'text-foreground/60 hover:text-foreground'
+              }`}
+            >
+              🏆 Пранки года
+            </button>
           </div>
         </div>
       </nav>
@@ -76,6 +86,33 @@ export default function Index() {
             <p className="text-3xl text-foreground/80 animate-float">
               👆 Нажми на экран 👆
             </p>
+          </div>
+        </div>
+      )}
+
+      {currentSection === 'pranks' && (
+        <div className="container mx-auto px-4 py-20">
+          <h2 className="text-6xl md:text-7xl font-black text-center mb-12 bg-gradient-to-r from-primary via-secondary to-accent bg-clip-text text-transparent">
+            🏆 ПРАНКИ ГОДА 🏆
+          </h2>
+          <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4">
+            {Array.from({ length: 20 }, (_, i) => (
+              <Card
+                key={i}
+                className="cursor-pointer hover:scale-105 transition-all border-2 border-border hover:border-primary"
+                onClick={() => {
+                  const audio = new Audio('https://actions.google.com/sounds/v1/cartoon/cartoon_boing.ogg');
+                  audio.play();
+                }}
+              >
+                <CardContent className="p-4">
+                  <div className="text-6xl text-center mb-2">
+                    {['😂', '💀', '🤡', '🎪', '🤪', '😱', '🔥', '💩', '🍆', '🍑', '👻', '🤮', '😈', '🎉', '💥', '🌈', '🤯', '😵', '🥴', '🤢'][i]}
+                  </div>
+                  <p className="text-sm text-center font-bold">Мем #{i + 1}</p>
+                </CardContent>
+              </Card>
+            ))}
           </div>
         </div>
       )}
